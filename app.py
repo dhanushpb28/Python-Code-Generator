@@ -5,13 +5,12 @@ from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
-# Different templates for generated code
 CODE_TEMPLATES = {
     "phone": textwrap.dedent("""\
         import re
 
         input_string = {input_string_literal}
-        pattern = r'(?<!\\d)[6-9]\\d{{9}}(?!\\d)'  # 10-digit Indian phone number
+        pattern = r'(?<!\\d)[6-9]\\d{{9}}(?!\\d)' 
 
         matches = re.findall(pattern, input_string)
 
@@ -26,7 +25,7 @@ CODE_TEMPLATES = {
         import re
 
         input_string = {input_string_literal}
-        pattern = r'[\\w.+-]+@[\\w-]+\\.[\\w.-]+'  # Email pattern
+        pattern = r'[\\w.+-]+@[\\w-]+\\.[\\w.-]+' 
 
         matches = re.findall(pattern, input_string)
 
@@ -41,7 +40,7 @@ CODE_TEMPLATES = {
         import re
 
         input_string = {input_string_literal}
-        pattern = r'https?://\\S+'  # Match http or https URLs
+        pattern = r'https?://\\S+'  
 
         matches = re.findall(pattern, input_string)
 
@@ -56,13 +55,13 @@ CODE_TEMPLATES = {
         import re
 
         input_string = {input_string_literal}
-        clean_text = re.sub(r'<.*?>', '', input_string)  # Remove HTML tags
+        clean_text = re.sub(r'<.*?>', '', input_string) 
 
         print("Text without HTML tags:", clean_text)
     """),
 }
 
-# HTML front-end (copy button removed)
+
 HTML_TEMPLATE = """
 <!doctype html>
 <html>
@@ -173,3 +172,4 @@ def home():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
