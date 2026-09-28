@@ -1,18 +1,15 @@
-# app.py
 import re
 import textwrap
 from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
-# Different templates for generated code
 CODE_TEMPLATES = {
     "phone": textwrap.dedent("""\
         import re
 
         input_string = {input_string_literal}
-        pattern = r'(?<!\\d)[6-9]\\d{{9}}(?!\\d)'  # 10-digit Indian phone number
-
+        pattern = r'(?<!\\d)[6-9]\\d{{9}}(?!\\d)' 
         matches = re.findall(pattern, input_string)
 
         if matches:
@@ -26,7 +23,7 @@ CODE_TEMPLATES = {
         import re
 
         input_string = {input_string_literal}
-        pattern = r'[\\w.+-]+@[\\w-]+\\.[\\w.-]+'  # Email pattern
+        pattern = r'[\\w.+-]+@[\\w-]+\\.[\\w.-]+'  
 
         matches = re.findall(pattern, input_string)
 
@@ -41,7 +38,7 @@ CODE_TEMPLATES = {
         import re
 
         input_string = {input_string_literal}
-        pattern = r'https?://\\S+'  # Match http or https URLs
+        pattern = r'https?://\\S+' 
 
         matches = re.findall(pattern, input_string)
 
@@ -56,13 +53,12 @@ CODE_TEMPLATES = {
         import re
 
         input_string = {input_string_literal}
-        clean_text = re.sub(r'<.*?>', '', input_string)  # Remove HTML tags
+        clean_text = re.sub(r'<.*?>', '', input_string)  
 
         print("Text without HTML tags:", clean_text)
     """),
 }
 
-# HTML front-end (copy button removed)
 HTML_TEMPLATE = """
 <!doctype html>
 <html>
@@ -99,6 +95,8 @@ HTML_TEMPLATE = """
     .submit-btn:hover { background:#0056b3; }
     .results, .code-block { margin-top: 2rem; }
     pre { position: relative; background:#2d2d2d; color:#f8f8f2; padding:14px; border-radius:10px; overflow:auto; white-space:pre-wrap; font-size:14px; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background:#007bff; color:#fff; border:none; border-radius:6px; padding:4px 10px; cursor:pointer; font-size:13px; }
+    .copy-btn:hover { background:#0056b3; }
   </style>
 </head>
 <body>
@@ -125,10 +123,20 @@ HTML_TEMPLATE = """
   {% if generated_code %}
     <div class="code-block">
       <h3>Generated Python Code:</h3>
-      <pre><code id="codeBox">{{ generated_code }}</code></pre>
+      <pre><button class="copy-btn" onclick="copyCode()">Copy</button><code id="codeBox">{{ generated_code }}</code></pre>
     </div>
   {% endif %}
 </div>
+
+<script>
+function copyCode() {
+  const codeElement = document.getElementById("codeBox");
+  const text = codeElement.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Code copied to clipboard!");
+  });
+}
+</script>
 </body>
 </html>
 """
